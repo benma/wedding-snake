@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	  <title>Snake!</title>
+      <script type="text/javascript" src="js/jquery-1.7.1.min.js" ></script>
+	  <script type="text/javascript" src="js/snake.js" ></script>
+	  
+	  <meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no">
+	  <link rel="icon" type="image/ico" href="css/images/favicon.ico">
+	  <link href="css/snake.css" rel="stylesheet" />
+  </head>
+  
+  <body>
+	<div id="wrapper">
+	  <div id="header">
+		<div id="pause-button-wrapper">
+		  <a href="#" class="pause-button button">Pause</a>
+		</div>
+		
+		<h1>Snake!</h1>
+		
+		<div id="score_contain">
+		  Score: <span id="score">0</span>
+		</div>
+	  </div>
+	  
+	  <div id="canvas-background">
+		<canvas id='canvas'></canvas>
+	  </div>
+
+      <!-- modal content -->
+	  <div id="main-menu">
+		<div id="main-content" class="menu">
+		  <h3>Elena & Reto</h3>
+		  <a href="#" class="simplemodal-close large button" onclick="start();">Start</a>
+		</div>
+		
+		<div id="pause-content" class="menu" style="display:none;">
+		  <h3 class="paused">Pause</h3>
+		  <a href="#" class="simplemodal-close large button" onclick="restart();">Von vorne</a>
+		  <a href="#" class="simplemodal-close large button" onclick="play();">Weiterspielen</a>
+		</div>
+		
+		<div id="gameover-content" class="menu" style="display:none;">
+		  <div id="ribbon" class="hide">
+			<div class="ribbon-body">
+			  <span>REKORD!</span>
+			</div>         
+			<div class="triangle"></div>   
+		  </div> 
+		  <h3 class="about">GAME OVER</h3>
+		  <p class="your">Your Score:</p> 
+		  <span class='current-score'>0</span>
+		  <a href="#" class="simplemodal-close button replay blue medium" onclick="restart();">Nochmal?</a>
+		</div>
+	  </div>
+	</div>
+	
+	<script type="text/javascript">
+	  $(document).ready(function() {
+	  
+	  orient();          
+	  runSnake();				
+	  
+	  $('a.pause-button').click(function (e) {
+	  e.preventDefault();
+	  pause();
+	  pauseMenu();
+	  });
+	  });
+	</script>
+	<script type="text/javascript">
+	  window.applicationCache.addEventListener('updateready', function(){
+	  window.applicationCache.swapCache();
+	  }, false);
+	</script>
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-29884566-1']);
+	  _gaq.push(['_trackPageview']);
+	  
+	  (function() {
+	  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
+  </body>
+</html>
