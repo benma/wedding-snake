@@ -1,6 +1,8 @@
 var allowPressKeys = false;
 var ctx, startLength, snakeSpeed, snakeDirection, headAngle, headFlip;
-var headImg, headImg2, foodImg, skinImg;
+var headImg, headImg2, skinImg;
+var foodImgs;
+var foodIndex;
 
 var size = 15;
 
@@ -82,13 +84,20 @@ function runSnake() {
     if (canvas.getContext) {
 	mainMenu();
 	ctx = canvas.getContext('2d');
-        
-        headImg = new Image();
-        headImg.src = "head.png";
-        headImg2 = new Image();
-        headImg2.src = "head2.png";
-        foodImg = new Image();
-        foodImg.src = "food.png";
+
+        var newImg = function(src) { var img = new Image(); img.src = src; return img; }
+        headImg = newImg("head.png");
+        headImg2 = newImg("head2.png");
+        foodImgs = [
+            newImg("food/pizza.png"),
+            newImg("food/sandwich.png"),
+            newImg("food/redbull.png"),
+            newImg("food/cookie.png"),
+            newImg("food/cake2.png")
+        ];
+        foodIndex = 0;
+        // foodImg = new Image();
+        // foodImg.src = "food.png";
         // skinImg = new Image();
         // skinImg.src = "skin1.jpg";
         
@@ -256,7 +265,7 @@ function drawSnake() {
     //ctx.fillStyle = "rgb(10,100,0)";
     //ctx.fillRect(suggestedPoint[0], suggestedPoint[1], gridSize, gridSize);
     var foodSize = gridSize * 2;
-    ctx.drawImage(foodImg, suggestedPoint[0] + gridSize / 2 - foodSize / 2, suggestedPoint[1] + gridSize / 2 - foodSize / 2, foodSize, foodSize);
+    ctx.drawImage(foodImgs[foodIndex], suggestedPoint[0] + gridSize / 2 - foodSize / 2, suggestedPoint[1] + gridSize / 2 - foodSize / 2, foodSize, foodSize);
     
     
     snakeBody.push([currentPosition['x'], currentPosition['y']]);
@@ -305,6 +314,8 @@ function drawSnake() {
 
     if (currentPosition['x'] == suggestedPoint[0] && currentPosition['y'] == suggestedPoint[1]) {
 	makeFood();
+        foodIndex = (foodIndex + 1) % foodImgs.length;
+
 	snakeLength += 1;
 	updateScore();
     }
