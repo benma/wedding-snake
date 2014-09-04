@@ -148,13 +148,15 @@ function gameMenu() {
     mainMenu();
 }
 
-function start(sl) {
+function start(sl, fi) {
     ctx.clearRect(0,0, canvas.width, canvas.height);
     this.currentPosition = {'x':gridSize*3,'y':gridSize*3};
     snakeBody = [];
     snakeLength = sl || startLength;
+    foodIndex = fi || 0;
     headAngle = 0;
     headFlip = 1;
+    
     makeFood();
     drawSnake();
     snakeDirection = 'right';
@@ -449,7 +451,7 @@ function gameOver() {
     // game over is not the end; decrease snake length and go again.
     pause();
     ctx.clearRect(0,0, canvas.width, canvas.height);
-    start(snakeLength - 1);
+    start(snakeLength - 1, foodIndex);
     updateScore();
 }
 
