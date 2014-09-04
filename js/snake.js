@@ -276,51 +276,35 @@ function moveSnake() {
 }
 
 function leftPosition() {
-    return currentPosition['x'] - gridSize;
+    return (currentPosition['x'] + canvas.width - gridSize) % canvas.width;
 }
 
 function rightPosition() {
-    return currentPosition['x'] + gridSize;
+    return (currentPosition['x'] + gridSize) % canvas.width;
 }
 
 function upPosition() {
-    return currentPosition['y'] - gridSize;
+    return (currentPosition['y'] + canvas.height - gridSize) % canvas.height;
 }
 
 function downPosition() {
-    return currentPosition['y'] + gridSize;
+    return (currentPosition['y'] + gridSize) % canvas.height;
 }
 
 function moveUp() {
-    if (upPosition() >= 0) {
-	executeMove('up', 'y', upPosition());
-    } else {
-	whichWay('x');
-    }
+    executeMove('up', 'y', upPosition());
 }
 
 function moveDown() {
-    if (downPosition() < canvas.height) {
-	executeMove('down', 'y', downPosition());
-    } else {
-	whichWay('x');
-    }
+    executeMove('down', 'y', downPosition());
 }
 
 function moveLeft() {
-    if (leftPosition() >= 0) {
-	executeMove('left', 'x', leftPosition());
-    } else {
-	whichWay('y');
-    }
+    executeMove('left', 'x', leftPosition());
 }
 
 function moveRight() {
-    if (rightPosition() < canvas.width) {
-	executeMove('right', 'x', rightPosition());
-    } else {
-	whichWay('y');
-    }
+    executeMove('right', 'x', rightPosition());
 }
 
 function executeMove(dirValue, axisType, axisValue) {
