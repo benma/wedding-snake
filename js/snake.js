@@ -1,6 +1,6 @@
 var allowPressKeys = false;
 var ctx, startLength, snakeSpeed, snakeDirection, headAngle, headFlip;
-var headImg, foodImg, skinImg;
+var headImg, headImg2, foodImg, skinImg;
 
 var size = 15;
 
@@ -29,6 +29,36 @@ function orient() {
     }
 }
 
+function drawHeart() {
+
+    ctx.save();
+    var w = 150, h = 150;
+
+    ctx.strokeStyle = "#000000";
+    ctx.strokeWeight = 3;
+    ctx.shadowOffsetX = 4.0;
+    ctx.shadowOffsetY = 4.0;
+    ctx.lineWidth = 3.0;
+    ctx.fillStyle = "#FF0000";
+    var d = Math.min(w, h);
+    var k = 120;
+
+
+    ctx.moveTo(k, k + d / 4);
+    ctx.quadraticCurveTo(k, k, k + d / 4, k);
+    ctx.quadraticCurveTo(k + d / 2, k, k + d / 2, k + d / 4);
+    ctx.quadraticCurveTo(k + d / 2, k, k + d * 3/4, k);
+    ctx.quadraticCurveTo(k + d, k, k + d, k + d / 4);
+    ctx.quadraticCurveTo(k + d, k + d / 2, k + d * 3/4, k + d * 3/4);
+    ctx.lineTo(k + d / 2, k + d);
+    ctx.lineTo(k + d / 4, k + d * 3/4);
+    ctx.quadraticCurveTo(k, k + d / 2, k, k + d / 4);
+
+    ctx.stroke();
+    ctx.fill();
+    ctx.restore();
+}
+
 function runSnake() {
     canvas = document.getElementById('canvas');
 
@@ -55,6 +85,8 @@ function runSnake() {
         
         headImg = new Image();
         headImg.src = "head.png";
+        headImg2 = new Image();
+        headImg2.src = "head2.png";
         foodImg = new Image();
         foodImg.src = "food.png";
         // skinImg = new Image();
@@ -101,11 +133,11 @@ function gameMenu() {
     mainMenu();
 }
 
-function start() {
+function start(sl) {
     ctx.clearRect(0,0, canvas.width, canvas.height);
     this.currentPosition = {'x':gridSize*3,'y':gridSize*3};
     snakeBody = [];
-    snakeLength = startLength;
+    snakeLength = sl || startLength;
     headAngle = 0;
     headFlip = 1;
     makeFood();
@@ -218,6 +250,7 @@ function drawSnake() {
 	return false;
     }
 
+    
 
     // draw food
     //ctx.fillStyle = "rgb(10,100,0)";
@@ -228,23 +261,43 @@ function drawSnake() {
     
     snakeBody.push([currentPosition['x'], currentPosition['y']]);
     $(snakeBody).each(function(i, pos) {
-        if(i < snakeBody.length - 1) {
+
+        if(i < snakeBody.length - 2) {
             ctx.fillStyle = "#454545";
             ctx.fillRect(pos[0], pos[1], gridSize, gridSize);
             //ctx.drawImage(skinImg, pos[0], pos[1], gridSize, gridSize);
         }
     });
 
+    var drawHead = function(headImg, pos, flip, angle) {
+
+        
+        headSize = gridSize*2.5;
+        
+            
+        ctx.save();
+        ctx.translate(pos[0] + gridSize / 2, pos[1] + gridSize / 2);
+        ctx.scale(flip, 1);
+        ctx.rotate(angle*Math.PI/180);
+        ctx.drawImage(headImg,  - headSize / 2, -headSize / 2, headSize, headSize);
+        ctx.restore();
+        // }
+        // else if (i == snakeBody.length - 2) {
+        //     ctx.save();
+        //     ctx.translate(pos[0] + gridSize / 2, pos[1] + gridSize / 2);
+        //     ctx.scale(headFlip, 1);
+        //     ctx.rotate(headAngle*Math.PI/180);
+        //     ctx.drawImage(headImg2,  - headSize / 2, -headSize / 2, headSize, headSize);
+        //     ctx.restore();
+        // }
+    };
+    drawHead(headImg, snakeBody[snakeBody.length - 1], headFlip, headAngle);
+    if(snakeBody.length > 1)
+        drawHead(headImg2, snakeBody[snakeBody.length - 2], 1, 0);
+    
+
     // ctx.fillStyle = "#ff0000";
     // ctx.fillRect(currentPosition['x'], currentPosition['y'], gridSize, gridSize);
-    
-    headSize = gridSize*2.5;
-    ctx.save();
-    ctx.translate(currentPosition['x'] + gridSize / 2, currentPosition['y'] + gridSize / 2);
-    ctx.scale(headFlip, 1);
-    ctx.rotate(headAngle*Math.PI/180);
-    ctx.drawImage(headImg,  - headSize / 2, -headSize / 2, headSize, headSize);
-    ctx.restore();
     if (snakeBody.length > snakeLength) {
 	var itemToRemove = snakeBody.shift();
 	//ctx.clearRect(itemToRemove[0], itemToRemove[1], gridSize, gridSize);
@@ -368,14 +421,19 @@ function whichWay(axisType) {
 }
 
 function gameOver() {
-    var score = (snakeLength - startLength) * 10;
-    gameScore();
+    // var score = (snakeLength - startLength) * 10;
+    // gameScore();
+    // pause();
+    // snakeLength = startLength;
+    // score = 0;
+    // updateScore();
+    // allowPressKeys = false;
+
+    // game over is not the end; decrease snake length and go again.
     pause();
-    snakeLength = startLength;
-    score = 0;
-    updateScore();
-    allowPressKeys = false;
     ctx.clearRect(0,0, canvas.width, canvas.height);
+    start(snakeLength - 1);
+    updateScore();
 }
 
 function updateScore() {
