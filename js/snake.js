@@ -93,7 +93,13 @@ function runSnake() {
             newImg("food/sandwich.png"),
             newImg("food/redbull.png"),
             newImg("food/cookie.png"),
-            newImg("food/cake2.png")
+            newImg("food/pizza.png"),
+            newImg("food/redbull.png"),
+            newImg("food/sandwich.png"),
+            newImg("food/cookie.png"),
+            newImg("food/cake2.png"),
+            newImg("food/heart.png")
+
         ];
         foodIndex = 0;
         // foodImg = new Image();
