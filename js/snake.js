@@ -197,9 +197,9 @@ document.onkeydown = function(event) {
     
     var keyCode = event ? event.keyCode : window.event.keyCode;
 
-    if(keyCode == 80) { // P
-        togglePause();
-    }
+    // if(keyCode == 80) { // P
+    //     togglePause();
+    // }
     
     if (!allowPressKeys){
     	return;
@@ -207,6 +207,7 @@ document.onkeydown = function(event) {
     switch(keyCode)
     {
         case 37:
+        case 65:
 	// left arrow key
 	if (snakeDirection != 'left' && snakeDirection != 'right') {
 	    moveLeft();
@@ -214,6 +215,7 @@ document.onkeydown = function(event) {
 	break;
 	
 	case 38:
+        case 87:
 	// up arrow key
 	if (snakeDirection != 'up' && snakeDirection != 'down') {
 	    moveUp();
@@ -221,6 +223,7 @@ document.onkeydown = function(event) {
 	break;
 	
 	case 39:
+        case 68:
 	// right arrow key
 	if (snakeDirection != 'left' && snakeDirection != 'right') {
 	    moveRight();
@@ -228,6 +231,7 @@ document.onkeydown = function(event) {
 	break;
 	
 	case 40:
+        case 83:
 	// down arrow key
 	if (snakeDirection != 'up' && snakeDirection != 'down') {
 	    moveDown();
