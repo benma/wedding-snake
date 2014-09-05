@@ -70,7 +70,7 @@ function drawHeart() {
 function win() {
     pause();
     
-    congrats.height($(window).height());
+    congrats.height($(window).height()-2);
     congrats.width($(window).height() * 1.41);
     congrats.offset({left:$(window).width()/2-congrats.width()/2, top:0});
     congrats.fadeIn({ duration: 2000 });
@@ -174,9 +174,9 @@ function start(sl, fi) {
     headAngle = 0;
     headFlip = 1;
     
+    snakeDirection = 'right';
     makeFood();
     drawSnake();
-    snakeDirection = 'right';
     play();
 }
 
@@ -256,18 +256,35 @@ function getRandomInt(min, max) {
 }
 
 function makeFood() {
-    suggestedPoint = null;
 
     
     var hasPoint = function(element, index, array) {
         return (element[0] == suggestedPoint[0] && element[1] == suggestedPoint[1]);
     };
-    while(!suggestedPoint || some(snakeBody, hasPoint) || foodHit()) {
+
+    var curline, axis;
+    if(snakeDirection == 'left' || snakeDirection == 'right') {
+        curline = currentPosition['y'] / gridSize;
+        axis = 1;
+    } else {
+        axis = 0;
+        curline = currentPosition['x'] / gridSize;
+    }
+    var excludeFront = false, counter = 0;
+    while(true) {
         // no food on the borders, otherwise the food's image will be partly invisible
         var px = getRandomInt(1, size-1);
+        if(counter < 10 && axis == 0 && (px == curline || px == curline - 1 || px == curline + 1))
+            continue;
         var py = getRandomInt(1, size-1);
-    
+        if(counter < 10 && axis == 1 && (py == curline || py == curline - 1 || py == curline + 1))
+            continue;
         suggestedPoint = [px * gridSize, py * gridSize];
+        
+        if(!some(snakeBody, hasPoint) && !foodHit()) {
+            break;
+        }
+        ++counter;
     }
 }
 
