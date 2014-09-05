@@ -6,6 +6,12 @@ var foodIndex;
 
 var size = 15;
 
+function some(ar, callback) {
+    for(var i = 0; i < ar.length; ++i)
+        if(callback(ar[i])) return true;
+    return false;
+}
+
 function orient() {
     var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
     
@@ -238,10 +244,10 @@ function makeFood() {
     suggestedPoint = null;
 
     
-    hasPoint = function(element, index, array) {
+    var hasPoint = function(element, index, array) {
         return (element[0] == suggestedPoint[0] && element[1] == suggestedPoint[1]);
     };
-    while(!suggestedPoint || snakeBody.some(hasPoint)) {
+    while(!suggestedPoint || some(snakeBody, hasPoint) || foodHit()) {
         // no food on the borders, otherwise the food's image will be partly invisible
         var px = getRandomInt(1, size-1);
         var py = getRandomInt(1, size-1);
@@ -250,19 +256,15 @@ function makeFood() {
     }
 }
 
-
-
-function biteMe(element, index, array) {
+function biteMe(element) {
     return (element[0] == currentPosition['x'] && element[1] == currentPosition['y']);
 }
-
-
 
 function drawSnake() {
 
     ctx.clearRect(0,0, canvas.width, canvas.height);
     
-    if (snakeBody.some(biteMe)) {
+    if (some(snakeBody, biteMe)) {
 	gameOver();
 	return false;
     }
@@ -320,13 +322,27 @@ function drawSnake() {
 	//ctx.clearRect(itemToRemove[0], itemToRemove[1], gridSize, gridSize);
     }
 
-    if (currentPosition['x'] == suggestedPoint[0] && currentPosition['y'] == suggestedPoint[1]) {
+    
+    if(foodHit()) {
 	makeFood();
         foodIndex = (foodIndex + 1) % foodImgs.length;
 
 	snakeLength += 1;
 	updateScore();
     }
+}
+
+
+function foodHit() {
+    var foodHitPositions = [suggestedPoint];
+    var fx = suggestedPoint[0], fy = suggestedPoint[1];
+    if(fx + gridSize < canvas.width) foodHitPositions.push([fx + gridSize, fy]);
+    if(fx - gridSize >= 0) foodHitPositions.push([fx - gridSize, fy]);
+    if(fy + gridSize < canvas.height) foodHitPositions.push([fx, fy + gridSize]);
+    if(fy - gridSize >= 0) foodHitPositions.push([fx, fy - gridSize]);
+
+    var hasPoint = function(el) { return el[0] == currentPosition['x'] && el[1] == currentPosition['y']; }
+    return some(foodHitPositions, hasPoint);
 }
 
 function moveSnake() {
