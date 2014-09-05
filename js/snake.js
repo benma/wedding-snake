@@ -3,7 +3,7 @@ var ctx, startLength, snakeSpeed, snakeDirection, headAngle, headFlip;
 var headImg, headImg2, skinImg;
 var foodImgs;
 var foodIndex;
-
+var congrats;
 var size = 15;
 
 function some(ar, callback) {
@@ -67,6 +67,17 @@ function drawHeart() {
     ctx.restore();
 }
 
+function win() {
+    pause();
+    
+    congrats.height($(window).height());
+    congrats.width($(window).height() * 1.41);
+    congrats.offset({left:$(window).width()/2-congrats.width()/2, top:0});
+    congrats.fadeIn({ duration: 2000 });
+    $('#wrapper').fadeOut({ duration: 2000 });
+    //$('body').css({background: 'none', backgroundColor: '#D4E0EC'});
+}
+
 function runSnake() {
     canvas = document.getElementById('canvas');
 
@@ -85,7 +96,7 @@ function runSnake() {
     canvas.width = jCanvas.width();
     canvas.height = jCanvas.height();
 
-    
+    congrats = $('#congrats');
     
     if (canvas.getContext) {
 	mainMenu();
@@ -328,7 +339,7 @@ function drawSnake() {
 
     
     if(foodHit()) {
-	makeFood();
+        makeFood();
         foodIndex = (foodIndex + 1) % foodImgs.length;
 
 	snakeLength += 1;
@@ -471,13 +482,14 @@ function gameOver() {
     // game over is not the end; decrease snake length and go again.
     pause();
     ctx.clearRect(0,0, canvas.width, canvas.height);
-    start(snakeLength - 1, foodIndex);
+    start(snakeLength - 1, Math.max(0, foodIndex - 1));
     updateScore();
 }
 
 function updateScore() {
     var score = (snakeLength - startLength)*10
     document.getElementById('score').innerHTML = score;
+    if(score == 100) win();
 }
 
 function gameScore() {
